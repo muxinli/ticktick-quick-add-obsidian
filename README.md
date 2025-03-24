@@ -88,10 +88,17 @@ The **TickTick Quickadd Plugin** lets you quickly create tasks in TickTick direc
 - **Settings Persistence:**  
   Credentials (Client ID, Client Secret, tokens) are stored using Obsidian’s storage. If you uninstall and reinstall the plugin, these settings are cleared.
 
-## Contributing & Code Quality
+## Code Quality
 
 - This plugin is written in TypeScript with structured logging and robust error handling.
 - All sensitive credentials are provided by the user through the settings UI—no hardcoded secrets are published.
+
+
+## Security:
+- The plugin does not include any hardcoded credentials.
+- All sensitive data is entered by the user through the settings UI. 
+- All data remains local
+- No tracking/analytics
 
 ## License
 

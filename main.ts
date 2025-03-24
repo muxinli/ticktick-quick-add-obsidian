@@ -78,16 +78,6 @@ export default class TickTickPlugin extends Plugin {
 		await this.loadSettings();
 		this.addSettingTab(new TickTickSettingTab(this.app, this));
 
-		this.addCommand({
-		  id: 'force-token-expiry',
-		  name: 'Force Token Expiry',
-		  callback: () => {
-		    this.settings.tokenExpiry = Date.now() - 1; // 1 ms in the past
-		    this.saveSettings();
-		    new Notice('Token expiry forced');
-		  }
-		});
-
 		// Register the command to create a TickTick task from a paragraph
 		this.addCommand({
 			id: 'create-ticktick-task',
