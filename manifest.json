@@ -1,7 +1,7 @@
 {
   "id": "ticktick-quickadd-plugin",
   "name": "TickTick Quick Add Task",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "minAppVersion": "0.12.0",
   "description": "Instantly creates a TickTick task from the current block of text in Obsidian using a keyboard shortcut. Task includes a copy of the text, and the URI to that exact block of text in your notes. Requires Advanced URI plugin.",
   "author": "Muxin Li",
