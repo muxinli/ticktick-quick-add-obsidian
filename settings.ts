@@ -4,9 +4,10 @@ import TickTickPlugin from './main';
 export interface TickTickSettings {
     accessToken: string;
     refreshToken?: string;
-    tokenExpiry?: number; // timestamp in ms when the token expires
+    tokenExpiry?: number;
     clientId: string;
     clientSecret: string;
+    redirectUri?: string; // New field for redirect URI
     tempCodeVerifier?: string;
     tempState?: string;
 }
@@ -14,7 +15,8 @@ export interface TickTickSettings {
 export const DEFAULT_SETTINGS: TickTickSettings = {
     accessToken: '',
     clientId: '',
-    clientSecret: ''
+    clientSecret: '',
+    redirectUri: 'urn:ietf:wg:oauth:2.0:oob' // Default to OOB mode (no server needed)
 };
 
 export class TickTickSettingTab extends PluginSettingTab {
@@ -57,25 +59,35 @@ export class TickTickSettingTab extends PluginSettingTab {
                 return text;
             });
 
-        // Display current access token (read-only) for user info
+        new Setting(containerEl)
+            .setName('Redirect URI')
+            .setDesc('Enter the Redirect URI registered in your TickTick Developer Portal. (Default: urn:ietf:wg:oauth:2.0:oob)')
+            .addText(text =>
+                text
+                    .setPlaceholder('urn:ietf:wg:oauth:2.0:oob')
+                    .setValue(this.plugin.settings.redirectUri || '')
+                    .onChange(async (value) => {
+                        this.plugin.settings.redirectUri = value.trim();
+                        await this.plugin.saveSettings();
+                    })
+            );
+
         new Setting(containerEl)
             .setName('Access Token')
-            .setDesc('Your current access token. (Reauthenticate if expired.)')
+            .setDesc('Your current access token (read-only).')
             .addText(text =>
                 text
                     .setPlaceholder('Access token will appear here')
                     .setValue(this.plugin.settings.accessToken || '')
                     .onChange(async (value) => {
-                        // For production, this field is normally not edited manually.
                         this.plugin.settings.accessToken = value.trim();
                         await this.plugin.saveSettings();
                     })
             );
 
-        // Optionally display refresh token and expiry (for debugging; you may hide these in production)
         new Setting(containerEl)
             .setName('Refresh Token')
-            .setDesc('Stored refresh token (for debugging).')
+            .setDesc('Stored refresh token (for debugging purposes).')
             .addText(text =>
                 text
                     .setPlaceholder('Refresh token')
@@ -86,21 +98,11 @@ export class TickTickSettingTab extends PluginSettingTab {
                     })
             );
 
-        // Add the Connect button and Authorization Code input as before
         new Setting(containerEl)
             .setName('Connect to TickTick')
             .setDesc('Click to open the OAuth authorization URL in your browser.')
             .addButton(async (button) => {
                 button.setButtonText('Connect').onClick(async () => {
-                    // (PKCE generation is handled in the plugin code; see main.ts for details.) 
-                    // This Connect button will open the auth URL.
-                    const clientId = this.plugin.settings.clientId;
-                    if (!clientId) {
-                        new Notice('Please enter your Client ID first.');
-                        return;
-                    }
-                    // For simplicity, we assume PKCE and state generation are done in main.ts settings tab code.
-                    // Here, we simply call the plugin's startAuthFlow() method.
                     await this.plugin.startAuthFlow();
                 });
             });
@@ -114,8 +116,8 @@ export class TickTickSettingTab extends PluginSettingTab {
                     .onChange(async (code) => {
                         if (code.trim()) {
                             await this.plugin.exchangeAuthCodeForToken(code.trim());
-                            text.setValue(''); // Clear the field after exchange
-                            this.display(); // Refresh the settings UI
+                            text.setValue('');
+                            this.display();
                         }
                     })
             );

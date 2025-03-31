@@ -8,8 +8,9 @@ The **TickTick Quickadd Plugin** lets you quickly create tasks in TickTick direc
 ## Features
 
 - **Quick Task Creation:** Convert a selected paragraph into a TickTick task with one command.
-- **Direct Linking:** Generate an Advanced URI link that takes you right back to the exact block in your note.
-- **Secure OAuth Integration:** Uses TickTick’s OAuth with PKCE for secure authentication and supports token auto-refresh.
+- **Direct Linking:** Generate an Advanced URI link that takes you right back to the exact block in your note (separate community plugin installation required).
+- **Secure OAuth Integration:** Uses TickTick's OAuth with PKCE for secure authentication and supports automatic token refresh.
+- **Automated Authentication:** Uses a temporary local server during the OAuth flow to automatically capture the callback, so you don’t have to copy and paste the authorization code manually.
 - **User-Friendly Settings:** Enter your TickTick API credentials securely and connect with just a few clicks.
 
 ## Installation
@@ -26,7 +27,7 @@ The **TickTick Quickadd Plugin** lets you quickly create tasks in TickTick direc
      npm install
      npm run build
      ```
-   - Copy the generated files (e.g., `main.js`, `manifest.json`, and `settings.js`) into your vault’s plugins folder:
+   - Copy the generated files (e.g., `main.js`, `manifest.json`, and `settings.js`) into your vault's plugins folder:
      ```
      YourVault/.obsidian/plugins/ticktick-quickadd-plugin/
      ```
@@ -37,20 +38,20 @@ The **TickTick Quickadd Plugin** lets you quickly create tasks in TickTick direc
 1. **Configure API Credentials:**
    - Open the plugin settings in Obsidian (Settings → Community Plugins → TickTick Quickadd Plugin → Settings).
    - Enter your **Client ID** and **Client Secret**.  
-     (To get these, sign in to the [TickTick Developer Portal](https://developer.ticktick.com/) and follow their “Get Started” instructions.)
+     (To get these, sign in to the [TickTick Developer Portal](https://developer.ticktick.com/) and follow their "Get Started" instructions.)
+   - **Important:** Make sure to add `http://127.0.0.1:3000/callback` as an allowed redirect URI in your TickTick Developer application settings.
    - **Note:** Your Client Secret input is masked for security.
 
 2. **Connect to TickTick:**
    - In the settings, click **Connect to TickTick**.
+   - The plugin will start a temporary local server on port 3000 to handle the OAuth callback.
    - Your browser will open the OAuth authorization URL. Log in to TickTick and authorize the plugin.
-   - After authorizing, you'll be directed to a page with an authorization code.
-     - **Tip:** It might take more than one attempt to retrieve the code. (This can happen due to network timing or OAuth quirks.)
-   - Copy the authorization code and paste it into the **Authorization Code** field in the plugin settings.
-     - Again, you might need to try a couple of times before it works.
-   - Once connected, you’ll receive a notice that the access token was obtained successfully.
+   - After authorizing, you'll be automatically redirected to the local callback server, which will capture the authorization code and exchange it for an access token.
+   - Once connected, you'll receive a notice that the access token was obtained successfully.
+   - **Note:** If you have a firewall, you may need to allow access to the temporary local server on port 3000.
 
 3. **Configure Hotkeys:**
-   - In Obsidian’s **Settings → Hotkeys**, scroll down to your TickTick Quickadd Plugin.
+   - In Obsidian's **Settings → Hotkeys**, scroll down to your TickTick Quickadd Plugin.
    - Assign a keyboard shortcut (e.g., Ctrl+Alt+T) to the command **"Create TickTick Task from Paragraph"**.
 
 ## Using the Plugin
@@ -65,6 +66,12 @@ The **TickTick Quickadd Plugin** lets you quickly create tasks in TickTick direc
 
 ## Troubleshooting & Testing
   
+- **Port Already in Use:**  
+  If port 3000 is already in use by another application, the OAuth flow will fail. Close any applications using port 3000 and try again.
+
+- **Firewall Blocking:**  
+  If your firewall is blocking the temporary local server, you may need to allow access to port 3000 during the OAuth flow.
+
 - **Invalid Credential Handling:**  
   If you enter an invalid Client ID or Secret, the OAuth flow will fail. Make sure your credentials are correct and match those in the TickTick Developer Portal.
 
@@ -82,22 +89,21 @@ The **TickTick Quickadd Plugin** lets you quickly create tasks in TickTick direc
 
 ## Known Issues
 
-- **OAuth Flow Hiccups:**  
-  It might take more than one attempt to successfully retrieve your authorization code and access token. Recommend retrying if you encounter an error.
-  
 - **Settings Persistence:**  
-  Credentials (Client ID, Client Secret, tokens) are stored using Obsidian’s storage. If you uninstall and reinstall the plugin, these settings are cleared.
+  Credentials (Client ID, Client Secret, tokens) are stored using Obsidian's storage. If you uninstall and reinstall the plugin, these settings are cleared.
 
 ## Code Quality
 
 - This plugin is written in TypeScript with structured logging and robust error handling.
 - All sensitive credentials are provided by the user through the settings UI—no hardcoded secrets are published.
-
+- The temporary local server is only active during the OAuth flow and automatically closes after completion.
 
 ## Security:
 - The plugin does not include any hardcoded credentials.
 - All sensitive data is entered by the user through the settings UI. 
 - All data remains local
+- The temporary server only runs during authentication and immediately closes afterward
+- OAuth state validation is implemented to prevent CSRF attacks
 - No tracking/analytics
 
 ## License
