@@ -16,7 +16,7 @@ export const DEFAULT_SETTINGS: TickTickSettings = {
     accessToken: '',
     clientId: '',
     clientSecret: '',
-    redirectUri: 'https://ticktick-quick-add-obsidian-arkey45rx-mooshs-projects-0635287d.vercel.app'
+    redirectUri: 'https://ticktick-quick-add-obsidian-6yawfmvnj-mooshs-projects-0635287d.vercel.app'
 };
 
 export class TickTickSettingTab extends PluginSettingTab {
