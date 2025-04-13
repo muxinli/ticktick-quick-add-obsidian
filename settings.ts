@@ -16,8 +16,7 @@ export const DEFAULT_SETTINGS: TickTickSettings = {
     accessToken: '',
     clientId: '',
     clientSecret: '',
-    // Default redirectUri set to the Vercel URL for your callback page
-    redirectUri: 'https://ticktick-oauth-callback.vercel.app'
+    redirectUri: 'https://ticktick-quick-add-obsidian-arkey45rx-mooshs-projects-0635287d.vercel.app'
 };
 
 export class TickTickSettingTab extends PluginSettingTab {
