@@ -1,7 +1,7 @@
 {
   "id": "ticktick-quickadd-task",
   "name": "TickTick Quick Add Task",
-  "version": "1.1.0",
+  "version": "1.0.8",
   "minAppVersion": "1.4.0",
   "description": "Create TickTick tasks from text blocks with automatic Obsidian URI links. Requires Advanced URI plugin.",
   "author": "Muxin Li",
