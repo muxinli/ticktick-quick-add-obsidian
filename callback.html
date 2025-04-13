@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TickTick OAuth Callback</title>
+</head>
+<body>
+  <h1>Authorization Complete</h1>
+  <p id="message">Processing...</p>
+  <script>
+    // Parse query parameters from the URL
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    const state = params.get('state');
+
+    if (code && state) {
+      document.getElementById('message').innerText =
+        `Authorization successful! Your code is: ${code}. Please copy this code and paste it into Obsidian.`;
+    } else {
+      document.getElementById('message').innerText =
+        'Authorization failed or was canceled. Please try again.';
+    }
+  </script>
+</body>
+</html>

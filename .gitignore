@@ -21,3 +21,4 @@ data.json
 /main.js
 *.js.map
 /dist/
+.vercel

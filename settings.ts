@@ -16,7 +16,8 @@ export const DEFAULT_SETTINGS: TickTickSettings = {
     accessToken: '',
     clientId: '',
     clientSecret: '',
-    redirectUri: 'urn:ietf:wg:oauth:2.0:oob' // Default to OOB mode (no server needed)
+    // Default redirectUri set to the Vercel URL for your callback page
+    redirectUri: 'https://ticktick-oauth-callback.vercel.app'
 };
 
 export class TickTickSettingTab extends PluginSettingTab {
