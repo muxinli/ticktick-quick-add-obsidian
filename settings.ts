@@ -61,10 +61,10 @@ export class TickTickSettingTab extends PluginSettingTab {
 
         new Setting(containerEl)
             .setName('Redirect URI')
-            .setDesc('Enter the Redirect URI registered in your TickTick Developer Portal. (Default: urn:ietf:wg:oauth:2.0:oob)')
+            .setDesc('Enter the Redirect URI registered in your TickTick Developer Portal. (Default: https://ticktick-quick-add-obsidian-6yawfmvnj-mooshs-projects-0635287d.vercel.app)')
             .addText(text =>
                 text
-                    .setPlaceholder('urn:ietf:wg:oauth:2.0:oob')
+                    .setPlaceholder('https://ticktick-quick-add-obsidian-6yawfmvnj-mooshs-projects-0635287d.vercel.app')
                     .setValue(this.plugin.settings.redirectUri || '')
                     .onChange(async (value) => {
                         this.plugin.settings.redirectUri = value.trim();
