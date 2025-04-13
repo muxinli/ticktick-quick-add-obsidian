@@ -39,7 +39,7 @@ The **TickTick Quickadd Plugin** lets you quickly create tasks in TickTick direc
    - Open the plugin settings in Obsidian (Settings → Community Plugins → TickTick Quickadd Plugin → Settings).
    - Enter your **Client ID** and **Client Secret**.  
      (To get these, sign in to the [TickTick Developer Portal](https://developer.ticktick.com/) and follow their "Get Started" instructions.)
-   - **Important:** Make sure to add `http://127.0.0.1:3000/callback` as an allowed redirect URI in your TickTick Developer application settings.
+   - **Important:** Make sure to add `https://ticktick-quick-add-obsidian-6yawfmvnj-mooshs-projects-0635287d.vercel.app` as an allowed redirect URI in your TickTick Developer application settings.
    - **Note:** Your Client Secret input is masked for security.
 
 2. **Connect to TickTick:**
