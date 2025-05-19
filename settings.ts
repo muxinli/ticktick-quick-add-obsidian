@@ -32,7 +32,7 @@ export class TickTickSettingTab extends PluginSettingTab {
         containerEl.empty();
 
         new Setting(containerEl)
-            .setName('Client ID')
+            .setName('Client id')
             .setDesc('Enter your TickTick Client ID from the Developer Console.')
             .addText(text =>
                 text
@@ -45,7 +45,7 @@ export class TickTickSettingTab extends PluginSettingTab {
             );
 
         new Setting(containerEl)
-            .setName('Client Secret')
+            .setName('Client secret')
             .setDesc('Enter your TickTick Client Secret (input is masked).')
             .addText(text => {
                 text.inputEl.type = 'password';
@@ -72,7 +72,7 @@ export class TickTickSettingTab extends PluginSettingTab {
             );
 
         new Setting(containerEl)
-            .setName('Access Token')
+            .setName('Access token')
             .setDesc('Your current access token (read-only).')
             .addText(text =>
                 text
@@ -85,7 +85,7 @@ export class TickTickSettingTab extends PluginSettingTab {
             );
 
         new Setting(containerEl)
-            .setName('Refresh Token')
+            .setName('Refresh token')
             .setDesc('Stored refresh token (for debugging purposes).')
             .addText(text =>
                 text
@@ -107,7 +107,7 @@ export class TickTickSettingTab extends PluginSettingTab {
             });
 
         new Setting(containerEl)
-            .setName('Authorization Code')
+            .setName('Authorization code')
             .setDesc('Paste the authorization code from TickTick here to obtain an access token.')
             .addText(text =>
                 text
