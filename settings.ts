@@ -30,7 +30,6 @@ export class TickTickSettingTab extends PluginSettingTab {
     display(): void {
         const { containerEl } = this;
         containerEl.empty();
-        containerEl.createEl('h2', { text: 'TickTick API Settings' });
 
         new Setting(containerEl)
             .setName('Client ID')

@@ -1,3 +1,4 @@
+import { arrayBufferToBase64 } from 'obsidian';
 import { App, Editor, MarkdownView, Notice, Plugin, requestUrl } from 'obsidian';
 import { TickTickSettingTab, TickTickSettings, DEFAULT_SETTINGS } from './settings';
 
@@ -45,8 +46,14 @@ function base64UrlEncode(buffer: ArrayBuffer): string {
 // Helper function to generate PKCE codes: codeVerifier and corresponding codeChallenge
 async function generatePKCECodes(): Promise<{ codeVerifier: string; codeChallenge: string }> {
     const codeVerifier = generateRandomString(64); // between 43 and 128 characters
-    const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(codeVerifier));
-    const codeChallenge = base64UrlEncode(hashBuffer);
+    // Compute SHA-256 hash of the verifier
+    const encoder = new TextEncoder();
+    const data = encoder.encode(codeVerifier);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const codeChallenge = arrayBufferToBase64(hashBuffer)
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=+$/, '');
     return { codeVerifier, codeChallenge };
 }
 
