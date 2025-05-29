@@ -81,7 +81,7 @@ export default class TickTickPlugin extends Plugin {
         // Command: Create TickTick task from a paragraph
         this.addCommand({
             id: 'create-ticktick-task',
-            name: 'Create TickTick Task from Paragraph',
+            name: 'Create TickTick task from paragraph',
             editorCallback: async (editor: Editor, view: MarkdownView) => {
                 const cursor = editor.getCursor();
                 if (!view.file) {
