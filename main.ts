@@ -12,6 +12,11 @@ function generateRandomString(length: number): string {
     return text;
 }
 
+// Helper function to retrieve the current line where the cursor is located
+function getCurrentLine(editor: Editor, line: number): { text: string, line: number } {
+    return { text: editor.getLine(line), line };
+}
+
 // Helper function to retrieve the paragraph (consecutive lines) where the cursor is located
 function getParagraph(editor: Editor, currentLine: number): { text: string, start: number, end: number } {
     let start = currentLine;
@@ -78,34 +83,52 @@ export default class TickTickPlugin extends Plugin {
         await this.loadSettings();
         this.addSettingTab(new TickTickSettingTab(this.app, this));
 
-        // Command: Create TickTick task from a paragraph
+        // Command: Create TickTick task
         this.addCommand({
             id: 'create-ticktick-task',
-            name: 'Create TickTick task from paragraph',
+            name: 'Create TickTick task',
             editorCallback: async (editor: Editor, view: MarkdownView) => {
                 const cursor = editor.getCursor();
                 if (!view.file) {
                     new Notice("No file found for the current view!");
                     return;
                 }
-                const { text: paragraphText, start, end } = getParagraph(editor, cursor.line);
-                if (!paragraphText) {
-                    new Notice("No paragraph text found!");
+
+                // Get text based on selection mode setting
+                let taskText: string;
+                let rangeStart: number;
+                let rangeEnd: number;
+                if (this.settings.selectionMode === 'paragraph') {
+                    const { text, start, end } = getParagraph(editor, cursor.line);
+                    taskText = text;
+                    rangeStart = start;
+                    rangeEnd = end;
+                } else {
+                    const { text, line } = getCurrentLine(editor, cursor.line);
+                    taskText = text;
+                    rangeStart = line;
+                    rangeEnd = line;
+                }
+
+                if (!taskText.trim()) {
+                    new Notice("No text found on the current line!");
                     return;
                 }
 
                 // Generate unique block anchor
                 const blockId = generateRandomString(8);
-                // Prepend "#ticktick" to the paragraph and append the block anchor
-                const updatedParagraph = `#ticktick ${paragraphText} ^${blockId}`;
-                editor.replaceRange(updatedParagraph, { line: start, ch: 0 }, { line: end, ch: editor.getLine(end).length });
+                // Apply tag based on tag position setting
+                const updatedText = this.settings.tagPosition === 'prepend'
+                    ? `#ticktick ${taskText} ^${blockId}`
+                    : `${taskText} #ticktick ^${blockId}`;
+                editor.replaceRange(updatedText, { line: rangeStart, ch: 0 }, { line: rangeEnd, ch: editor.getLine(rangeEnd).length });
 
                 // Construct Advanced URI for the block
                 const vaultName = this.app.vault.getName();
                 const filePath = view.file.path;
                 const advancedUri = `obsidian://advanced-uri?vault=${encodeURIComponent(vaultName)}&filepath=${encodeURIComponent(filePath)}&block=${encodeURIComponent(blockId)}`;
-                const taskDescription = `${paragraphText}\n\n[Open in Obsidian](${advancedUri})`;
-                const taskTitle = paragraphText.length > 50 ? paragraphText.substring(0, 50) + "..." : paragraphText;
+                const taskDescription = `${taskText}\n\n[Open in Obsidian](${advancedUri})`;
+                const taskTitle = taskText.length > 50 ? taskText.substring(0, 50) + "..." : taskText;
 
                 await this.ensureFreshToken();
 

@@ -10,13 +10,17 @@ export interface TickTickSettings {
     redirectUri?: string; // New field for redirect URI
     tempCodeVerifier?: string;
     tempState?: string;
+    selectionMode: 'line' | 'paragraph';
+    tagPosition: 'append' | 'prepend';
 }
 
 export const DEFAULT_SETTINGS: TickTickSettings = {
     accessToken: '',
     clientId: '',
     clientSecret: '',
-    redirectUri: 'https://ticktick-quick-add-obsidian-6yawfmvnj-mooshs-projects-0635287d.vercel.app'
+    redirectUri: 'https://ticktick-quick-add-obsidian-6yawfmvnj-mooshs-projects-0635287d.vercel.app',
+    selectionMode: 'line',
+    tagPosition: 'append'
 };
 
 export class TickTickSettingTab extends PluginSettingTab {
@@ -67,6 +71,34 @@ export class TickTickSettingTab extends PluginSettingTab {
                     .setValue(this.plugin.settings.redirectUri || '')
                     .onChange(async (value) => {
                         this.plugin.settings.redirectUri = value.trim();
+                        await this.plugin.saveSettings();
+                    })
+            );
+
+        new Setting(containerEl)
+            .setName('Selection mode')
+            .setDesc('Choose whether the command captures only the current line or the entire paragraph.')
+            .addDropdown(dropdown =>
+                dropdown
+                    .addOption('line', 'Current line')
+                    .addOption('paragraph', 'Entire paragraph')
+                    .setValue(this.plugin.settings.selectionMode)
+                    .onChange(async (value: string) => {
+                        this.plugin.settings.selectionMode = value as 'line' | 'paragraph';
+                        await this.plugin.saveSettings();
+                    })
+            );
+
+        new Setting(containerEl)
+            .setName('Tag position')
+            .setDesc('Choose whether the #ticktick tag is added to the beginning or end of the text.')
+            .addDropdown(dropdown =>
+                dropdown
+                    .addOption('append', 'Append (end)')
+                    .addOption('prepend', 'Prepend (beginning)')
+                    .setValue(this.plugin.settings.tagPosition)
+                    .onChange(async (value: string) => {
+                        this.plugin.settings.tagPosition = value as 'append' | 'prepend';
                         await this.plugin.saveSettings();
                     })
             );
